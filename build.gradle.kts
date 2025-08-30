@@ -11,11 +11,6 @@ allprojects {
     }
 }
 
-val appModules = listOf(
-    "order-service",
-    "user-service"
-)
-
 
 // ✅ Общие настройки для всех подпроектов
 subprojects {
@@ -26,31 +21,39 @@ subprojects {
         kotlinOptions.jvmTarget = "21"
     }
 
+    val appModules = listOf(
+        "order-service",
+        "user-service"
+    )
+
     plugins.withId("org.jetbrains.kotlin.jvm") {
         if (name in appModules) {
             dependencies {
                 add("implementation", project(":shared"))
                 add("implementation", kotlin("stdlib"))
-                add("implementation",
+                add(
+                    "implementation",
                     "org.springframework.boot:spring-boot-starter-web"
                 )
-                add("implementation",
-                    "org.jetbrains.kotlin:kotlin-stdlib")
-                add("implementation",
-                    "com.fasterxml.jackson.module:jackson-module-kotlin"
+                add(
+                    "implementation",
+                    "org.jetbrains.kotlin:kotlin-stdlib"
                 )
-                add("implementation",
-                    "com.fasterxml.jackson.module:jackson-module-kotlin"
+
+                add(
+                    "implementation",
+                    "org.jetbrains.kotlin:kotlin-reflect"
                 )
-                add("implementation",
-                    "org.jetbrains.kotlin:kotlin-reflect")
-                add("testImplementation",
+                add(
+                    "testImplementation",
                     "org.springframework.boot:spring-boot-starter-test"
                 )
-                add("testImplementation",
+                add(
+                    "testImplementation",
                     "org.jetbrains.kotlin:kotlin-test-junit5"
                 )
-                add("testImplementation",
+                add(
+                    "testImplementation",
                     "org.junit.platform:junit-platform-launcher"
                 )
             }
