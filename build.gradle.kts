@@ -40,10 +40,13 @@ subprojects {
                     "implementation",
                     "org.jetbrains.kotlin:kotlin-stdlib"
                 )
-
                 add(
                     "implementation",
                     "org.jetbrains.kotlin:kotlin-reflect"
+                )
+                add(
+                    "implementation",
+                    "org.springframework.kafka:spring-kafka"
                 )
                 add(
                     "testImplementation",
@@ -56,6 +59,15 @@ subprojects {
                 add(
                     "testImplementation",
                     "org.junit.platform:junit-platform-launcher"
+                )
+                add(
+                    "testImplementation",
+                    "org.springframework.kafka:spring-kafka-test"
+                )
+
+                add(
+                    "implementation",
+                    "com.fasterxml.jackson.module:jackson-module-kotlin"
                 )
             }
         }
