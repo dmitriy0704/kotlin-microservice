@@ -1,5 +1,7 @@
 package dev.folomkin.orderservice.config
 
+import dev.folomkin.shared.dto.UserDto
+import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.common.serialization.StringDeserializer
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -16,24 +18,21 @@ class KafkaConsumerConfig {
 
 
     @Bean
-    fun consumerFactory(): ConsumerFactory<String, Any> {
-        val configProps = mapOf(
-            "bootstrap.servers" to "localhost:9092",
-            "group.id" to "order-group",
-            "auto.offset.reset" to "earliest"
-//            "key.deserializer" to StringDeserializer::class.java,
-//            "value.deserializer" to ErrorHandlingDeserializer::class.java,
-//            "spring.json.trusted.packages" to "*"
+    fun consumerFactory(): ConsumerFactory<String, UserDto> {
+        val props = mapOf(
+            ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG to "localhost:9092",
+            ConsumerConfig.GROUP_ID_CONFIG to "order-service-group",
+            ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG to StringDeserializer::class.java,
+            ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG to JsonDeserializer::class.java,
+            JsonDeserializer.TRUSTED_PACKAGES to "*"
         )
-        val deserializer = JsonDeserializer(Any::class.java)
-        deserializer.addTrustedPackages("*")
-        return DefaultKafkaConsumerFactory(configProps, StringDeserializer(), ErrorHandlingDeserializer(deserializer))
+        return DefaultKafkaConsumerFactory(props, StringDeserializer(), JsonDeserializer(UserDto::class.java))
     }
 
     @Bean
-    fun kafkaListenerContainerFactory(consumerFactory: ConsumerFactory<String, Any>): ConcurrentKafkaListenerContainerFactory<String, Any> {
-        val factory = ConcurrentKafkaListenerContainerFactory<String, Any>()
-        factory.consumerFactory = consumerFactory
+    fun kafkaListenerContainerFactory(): ConcurrentKafkaListenerContainerFactory<String, UserDto> {
+        val factory = ConcurrentKafkaListenerContainerFactory<String, UserDto>()
+        factory.consumerFactory = consumerFactory()
         return factory
     }
 }

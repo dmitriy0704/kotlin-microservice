@@ -17,14 +17,15 @@ class KafkaProducerConfig {
 
     @Bean
     fun producerFactory(): ProducerFactory<String, UserDto> {
-        val config = mapOf(
-            ProducerConfig.BOOTSTRAP_SERVERS_CONFIG to "localhost:9092",
-            ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG to StringSerializer::class.java,
-            ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG to JsonSerializer::class.java
-        )
+        val config: MutableMap<String, Any> = HashMap()
+        config[ProducerConfig.BOOTSTRAP_SERVERS_CONFIG] = "localhost:9092" // лучше вынести в application.yml
+        config[ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG] = StringSerializer::class.java
+        config[ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG] = JsonSerializer::class.java
         return DefaultKafkaProducerFactory(config)
     }
 
     @Bean
-    fun kafkaTemplate(): KafkaTemplate<String, UserDto> = KafkaTemplate(producerFactory())
+    fun kafkaTemplate(): KafkaTemplate<String, UserDto> {
+        return KafkaTemplate(producerFactory())
+    }
 }
